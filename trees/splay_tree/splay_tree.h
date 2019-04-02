@@ -164,8 +164,8 @@ void splay_tree<T, Compare>::splay(splay_tree<T, Compare>::node_type* node)
 {
 	while(node->parent)
 	{
-		node_type parent = node->parent;
-		node_type grand_parent = parent->parent;
+		node_type* parent = node->parent;
+		node_type* grand_parent = parent->parent;
 
 		auto node_to_rotate = (node==parent->left) && (parent ==grand_parent->left) ? parent : node;
 
@@ -255,16 +255,18 @@ size_t splay_tree<T, Compare>::size() const
 template <class T, class Compare>
 bool splay_tree<T, Compare>::empty() const
 {
-	return this->node_count==0;
+	return !this->node_count;
 }
 
 
-/*node_type 정의부입니다.*/
+
+
+/*여기부터 node_type 정의부입니다.*/
 template <class T, class Compare>
-splay_tree<T,Compare>::node_type(const splay_tree<T,Compare>::key_type& value)
+splay_tree<T,Compare>::node_type::node_type(const splay_tree<T,Compare>::key_type& value)
 	: value(value)
 {}
 template <class T, class Compare>
-splay_tree<T,Compare>::node_type(splay_tree<T,Compare>::key_type&& value) 
+splay_tree<T,Compare>::node_type::node_type(splay_tree<T,Compare>::key_type&& value) 
 	: value(std::move(value))
 {}
