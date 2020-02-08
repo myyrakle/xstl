@@ -32,49 +32,49 @@ namespace xstl
 	public:
 		heap() = default;
 		virtual ~heap() = default;
-	public: //±âº» »ı¼º/´ëÀÔÀÚ
+	public: //ê¸°ë³¸ ìƒì„±/ëŒ€ì…ì
 		heap(const heap&) = default;
 		heap(heap&&) = default;
 		heap& operator=(const heap&) = default;
 		heap& operator=(heap&&) = default;
 
-	public: //Áß°ıÈ£ ÃÊ±âÄ¡ ´ëÀÀ
+	public: //ì¤‘ê´„í˜¸ ì´ˆê¸°ì¹˜ ëŒ€ì‘
 		heap(std::initializer_list<T> init);
 		heap& operator=(std::initializer_list<T> init);
 
-	public: //vector¿ÍÀÇ È£È¯¿ë
+	public: //vectorì™€ì˜ í˜¸í™˜ìš©
 		heap(const std::vector<T>& vec);
 		heap(std::vector<T>&& vec);
 
-	public: //vector¿ÍÀÇ È£È¯¿ë
+	public: //vectorì™€ì˜ í˜¸í™˜ìš©
 		operator const std::vector<T>&() const;
 
 	public:
 		std::vector<T> sorted_vector() const;
 
-	public: //ÃÖ´ë ÈüÀ» ±âÁØÀ¸·Î, ÃÖ´ë°ªÀ» °¡Á®¿É´Ï´Ù.
+	public: //ìµœëŒ€ í™ì„ ê¸°ì¤€ìœ¼ë¡œ, ìµœëŒ€ê°’ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
 		const T& front() const;
 
-	public: //¿ä¼Ò¸¦ Ãß°¡ÇÕ´Ï´Ù.
+	public: //ìš”ì†Œë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤.
 		void push(const T& value);
 		void push(T&& value);
 		template <class ...Args>
 		void emplace(Args&&... args);
 
-	public: //ÃÖ´ë ÈüÀ» ±âÁØÀ¸·Î, ÃÖ´ë°ªÀ» Á¦°ÅÇÕ´Ï´Ù.
+	public: //ìµœëŒ€ í™ì„ ê¸°ì¤€ìœ¼ë¡œ, ìµœëŒ€ê°’ì„ ì œê±°í•©ë‹ˆë‹¤.
 		void pop();
 
 	public:
-		void clear(); //ÈüÀ» ÃÊ±âÈ­ÇÕ´Ï´Ù.
-		bool empty() const; //ºñ¾úÀ¸¸é true¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-		bool not_empty() const; //ºñ¾îÀÖÁö ¾ÊÀ¸¸é true¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-		size_t size() const; //ÈüÀÇ Å©±â¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+		void clear(); //í™ì„ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
+		bool empty() const; //ë¹„ì—ˆìœ¼ë©´ trueë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+		bool not_empty() const; //ë¹„ì–´ìˆì§€ ì•Šìœ¼ë©´ trueë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+		size_t size() const; //í™ì˜ í¬ê¸°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 		size_t max_size() const;
 		void reserve(size_t);
 		size_t capacity() const;
 		void shrink_to_fit();
 
-	public: //¹İº¹ÀÚÀÔ´Ï´Ù.
+	public: //ë°˜ë³µìì…ë‹ˆë‹¤.
 		const_iterator begin() const;
 		const_iterator end() const;
 		const_reverse_iterator rbegin() const;
@@ -88,7 +88,7 @@ namespace xstl
 		std::vector<T> datas;
 	};
 
-	//ÃÊ±âÈ­ ¸â¹öµé
+	//ì´ˆê¸°í™” ë©¤ë²„ë“¤
 	template<class T, class Compare>
 	heap<T, Compare>::heap(std::initializer_list<T> init) : datas(init)
 	{
