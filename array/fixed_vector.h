@@ -148,15 +148,39 @@ namespace xstl
         const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
         
-    public: //reserse iterator
-        iterator rbegin();
-        const_iterator rbegin() const noexcept;
-        const_iterator crbegin() const noexcept;
+    public: //reverse iterator
+        reverse_iterator rbegin();
+        const_reverse_iterator rbegin() const noexcept;
+        const_reverse_iterator crbegin() const noexcept;
         
-        iterator rend();
-        const_iterator rend() const noexcept;
-        const_iterator crend() const noexcept;
+        reverse_iterator rend();
+        const_reverse_iterator rend() const noexcept;
+        const_reverse_iterator crend() const noexcept;
         
+        class iterator
+        {
+        private:
+            T* current;
+        public:
+            using Self = iterator;
+        public:
+            T(T*);
+        public:
+            iterator& operator
+        };
+
+        class const_iterator
+        {
+        private:
+            T* current;
+        public:
+            using Self = iterator;
+        public:
+            T(T*);
+        public:
+            iterator& operator
+        };
     };
+
 
 }
