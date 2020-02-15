@@ -10,6 +10,8 @@ namespace xstl
     {
     public:
         using Self = fixed_vector;
+        
+    public: //stl standard type member
         using value_type = T;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
