@@ -4,6 +4,11 @@
 
 namespace xstl
 {
+    /*
+    Runtime Fixed Length Array.
+    Flexibility of use is lower than vector. 
+    But memory efficiency is much better.
+    */
 
     template <class T>
     class fixed_vector
