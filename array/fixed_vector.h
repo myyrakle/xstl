@@ -237,7 +237,7 @@ namespace xstl
                 current++;
                 return *this;
             }
-            Self operator++(int) const
+            Self operator++(int)
             {
                 current++;
                 return *this;
@@ -247,7 +247,7 @@ namespace xstl
                 current++;
                 return *this;
             }
-            Self operator--(int) const
+            Self operator--(int)
             {
                 current++;
                 return *this;
@@ -295,6 +295,12 @@ namespace xstl
 		public:
 			using Self = const_iterator;
 		public:
+			using value_type = value_type;
+			using pointer = pointer;
+			using reference = reference;
+			using difference_type = std::ptrdiff_t;
+			using iterator_category = std::random_access_iterator_tag;
+		public:
 			const_iterator() = delete;
 			virtual ~const_iterator() = default;
 		public: //move & copy member
@@ -311,7 +317,7 @@ namespace xstl
 				current++;
 				return *this;
 			}
-			Self operator++(int) const
+			Self operator++(int)
 			{
 				current++;
 				return *this;
@@ -321,7 +327,7 @@ namespace xstl
 				current++;
 				return *this;
 			}
-			Self operator--(int) const
+			Self operator--(int)
 			{
 				current++;
 				return *this;
