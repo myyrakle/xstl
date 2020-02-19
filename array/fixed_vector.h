@@ -34,21 +34,21 @@ namespace xstl
         T* _array = nullptr;
         size_type _length = 0;
     public:
-        fixed_vector(size_type length): _array(new T[length]), _length(length)
+        fixed_vector(size_type length): _array(new value_type[length]), _length(length)
         {}
 
-        fixed_vector(size_type length, const_reference value): _array(new T[length]), _length(length)
+        fixed_vector(size_type length, const_reference value): _array(new value_type[length]), _length(length)
         {
             for(int i=0; i < this->_length; i++)
                 _array[i] = value;
         }
 
-        fixed_vector(std::initializer_list<T> init): _array(new T[init.size()]), _length(init.size())
+        fixed_vector(std::initializer_list<value_type> init): _array(new value_type[init.size()]), _length(init.size())
         {
             int i = 0;
             for(auto&&e : init)
             {
-                _array[i];
+                _array[i] = e;
                 i++;
             }
         }
@@ -56,11 +56,11 @@ namespace xstl
         template<class InputIterator>
         fixed_vector(InputIterator begin, InputIterator end): _length(std::distance(begin, end))
         {
-            this->_array = new T[this->_length];
+            this->_array = new value_type[this->_length];
             int i = 0;
             for(;begin!=end; begin++)
             {
-                _array[i];
+                _array[i] = *begin;
                 i++;
             }
         }
@@ -119,18 +119,39 @@ namespace xstl
             }
         }
 
+        void assign(size_type length)
+        {
+            this->clear();
+            this->_length = length;
+            this->_array = new value_type[length];
+        }
         void assign(size_type length, const_reference value)
         {
-            this->clear();
+            this->assign(length);
+            for(int i=0; i < this->_length; i++)
+                _array[i] = value;
         }
-        void assign(std::initializer_list<T> init)
+        void assign(std::initializer_list<value_type> init)
         {
-            this->clear();
+            this->assign(init.size());
+            int i = 0;
+            for(auto&&e : init)
+            {
+                _array[i] = e;
+                i++;
+            }
         }
         template <class InputIterator>
         void assign(InputIterator begin, InputIterator end)
         {
-            this->clear();
+            this->assign(std::distance(begin, end));
+            this->_array = new value_type[this->_length];
+            int i = 0;
+            for(;begin!=end; begin++)
+            {
+                _array[i] = *begin;
+                i++;
+            }
         }
 
         void swap(Self& other) noexcept
@@ -146,11 +167,17 @@ namespace xstl
         }
 
     public: //iterator 
-        iterator begin();
+        iterator begin()
+        {
+            return iterator(this->_array);
+        }
         const_iterator begin() const noexcept;
         const_iterator cbegin() const noexcept;
         
-        iterator end();
+        iterator end()
+        {
+            return iterator(this->_array + this->_length);
+        }
         const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
         
@@ -226,6 +253,8 @@ namespace xstl
             {
                 return current;
             }
+        public: //comparer
+
         };
 
         class const_iterator
