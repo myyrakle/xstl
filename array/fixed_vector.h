@@ -210,6 +210,14 @@ namespace xstl
             {
                 return *current;
             }
+            reference operator[](size_type index)
+            {
+                return current[index];
+            }
+            const_reference operator[](size_type index) const
+            {
+                return current[index];
+            }
             pointer operator->()
             {
                 return current;
@@ -222,6 +230,7 @@ namespace xstl
 
         class const_iterator
         {
+            //TODO
         };
     };
 
