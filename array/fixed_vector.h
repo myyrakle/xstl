@@ -31,12 +31,9 @@ namespace xstl
         using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     private:
-        T* _array;
-        size_type _length;
+        T* _array = nullptr;
+        size_type _length = 0;
     public:
-        fixed_vector(): _array(nullptr), _length(0)
-        {}
-
         fixed_vector(size_type length): _array(new T[length]), _length(length)
         {}
 
@@ -67,7 +64,8 @@ namespace xstl
                 i++;
             }
         }
-
+    public:
+        fixed_vector() = default;
         virtual ~fixed_vector()
         {
             if(this->_array != nullptr)
@@ -168,15 +166,40 @@ namespace xstl
         class iterator
         {
         private:
-            value_type* current;
+            pointer* current;
         public:
             using Self = iterator;
         public:
-            
+            iterator() = delete;
+            virtual ~iterator() = default;
+        public: //move & copy member
+            iterator(const Self&) = default;
+            iterator(Self&&) = default;
+            Self& operator=(const Self&) = default;
+            Self& operator=(Self&&) = default;
         public:
-            T& operator++()
+            iterator(pointer p): current(p) 
+            {}
+        public: //move operator
+            Self& operator++()
             {
-                return current;
+                current++;
+                return *this;
+            }
+            Self operator++(int) const
+            {
+                current++;
+                return *this;
+            }
+            Self& operator--()
+            {
+                current++;
+                return *this;
+            }
+            Self operator--(int) const
+            {
+                current++;
+                return *this;
             }
         public: //access operator
             reference operator*()
@@ -199,14 +222,6 @@ namespace xstl
 
         class const_iterator
         {
-        private:
-            T* current;
-        public:
-            using Self = iterator;
-        public:
-            T(T*);
-        public:
-            iterator& operator
         };
     };
 
