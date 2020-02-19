@@ -194,11 +194,17 @@ namespace xstl
 		}
         
     public: //reverse iterator
-        reverse_iterator rbegin();
+		reverse_iterator rbegin()
+		{
+			return reverse_iterator(end());
+		}
         const_reverse_iterator rbegin() const noexcept;
         const_reverse_iterator crbegin() const noexcept;
         
-        reverse_iterator rend();
+		reverse_iterator rend()
+		{
+			return reverse_iterator(begin());
+		}
         const_reverse_iterator rend() const noexcept;
         const_reverse_iterator crend() const noexcept;
         
@@ -208,6 +214,12 @@ namespace xstl
             pointer current;
         public:
             using Self = iterator;
+		public:
+			using value_type = value_type;
+			using pointer = pointer;
+			using reference = reference;
+			using difference_type = std::ptrdiff_t;
+			using iterator_category = std::random_access_iterator_tag;
         public:
             iterator() = delete;
             virtual ~iterator() = default;
