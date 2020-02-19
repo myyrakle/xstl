@@ -1,14 +1,15 @@
+/*
+    Runtime Fixed Length Array.
+    Flexibility of use is lower than std::vector. 
+    But memory efficiency is much better.
+*/
+
 #include <stdexcept>
 #include <utility>
 #include <iterator>
 
 namespace xstl
 {
-    /*
-    Runtime Fixed Length Array.
-    Flexibility of use is lower than vector. 
-    But memory efficiency is much better.
-    */
 
     template <class T>
     class fixed_vector
@@ -167,13 +168,33 @@ namespace xstl
         class iterator
         {
         private:
-            T* current;
+            value_type* current;
         public:
             using Self = iterator;
         public:
-            T(T*);
+            
         public:
-            iterator& operator
+            T& operator++()
+            {
+                return current;
+            }
+        public: //access operator
+            reference operator*()
+            {
+                return *current;
+            }
+            const_reference operator*() const
+            {
+                return *current;
+            }
+            pointer operator->()
+            {
+                return current;
+            }
+            const_pointer operator->() const
+            {
+                return current;
+            }
         };
 
         class const_iterator
