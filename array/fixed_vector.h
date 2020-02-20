@@ -131,6 +131,14 @@ namespace xstl
 				throw std::out_of_range();
 			return this->_array[index];
 		}
+		pointer data()
+		{
+			return this->_array;
+		}
+		const_pointer data() const
+		{
+			return this->_array;
+		}
 
 	public:
 		bool empty() const noexcept
