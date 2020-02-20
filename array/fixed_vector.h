@@ -73,10 +73,42 @@ namespace xstl
 		}
 
 	public: //copy & move
-		fixed_vector(const Self&);
-		fixed_vector(Self&&);
-		Self& operator=(const Self&);
-		Self& operator=(Self&&);
+		fixed_vector(const Self& other)
+		{
+			this->_length = other._length;
+			this->_array = new value_type[other._length];
+
+			for (int i = 0; i < other._length; i++)
+				this->_array[i] = other._array[i];
+		}
+		fixed_vector(Self&& other)
+		{
+			this->_length = other._length;
+			this->_array = other._array;
+			other._length = 0;
+			other._array = nullptr;
+		}
+		Self& operator=(const Self& other)
+		{
+			this->clear();
+
+			this->_length = other._length;
+			this->_array = new value_type[other._length];
+
+			for (int i = 0; i < other._length; i++)
+				this->_array[i] = other._array[i];
+
+			return *this;
+		}
+		Self& operator=(Self&& other) 
+		{
+			this->_length = other._length;
+			this->_array = other._array;
+			other._length = 0;
+			other._array = nullptr;
+
+			return *this;
+		}
 
 	public:
 		reference operator[](size_type index)
@@ -192,21 +224,33 @@ namespace xstl
 		{
 			return const_iterator(this->_array + this->_length);
 		}
-        
-    public: //reverse iterator
+
+	public: //reverse iterator
 		reverse_iterator rbegin()
 		{
-			return reverse_iterator(end());
+			return reverse_iterator(this->end());
 		}
-        const_reverse_iterator rbegin() const noexcept;
-        const_reverse_iterator crbegin() const noexcept;
+		const_reverse_iterator rbegin() const noexcept
+		{
+			return this->crbegin();
+		}
+		const_reverse_iterator crbegin() const noexcept
+		{
+			return const_reverse_iterator(this->cend());
+		}
         
 		reverse_iterator rend()
 		{
-			return reverse_iterator(begin());
+			return reverse_iterator(this->begin());
 		}
-        const_reverse_iterator rend() const noexcept;
-        const_reverse_iterator crend() const noexcept;
+		const_reverse_iterator rend() const noexcept
+		{
+			return this->crend();
+		}
+		const_reverse_iterator crend() const noexcept
+		{
+			return const_reverse_iterator(this->cbegin());
+		}
         
         class iterator
         {
@@ -244,12 +288,12 @@ namespace xstl
             }
             Self& operator--()
             {
-                current++;
+                current--;
                 return *this;
             }
             Self operator--(int)
             {
-                current++;
+                current--;
                 return *this;
             }
         public: //access operator
@@ -324,12 +368,12 @@ namespace xstl
 			}
 			Self& operator--()
 			{
-				current++;
+				current--;
 				return *this;
 			}
 			Self operator--(int)
 			{
-				current++;
+				current--;
 				return *this;
 			}
 		public: //access operator
