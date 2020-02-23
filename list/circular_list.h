@@ -34,5 +34,88 @@ namespace xstl
             value_type value;
             Self* next;
         };
+
+
+    public:
+        iterator begin()
+        {
+            return iterator(this->_head);
+        }
+        iterator end()
+        {
+            return iterator(nullptr);
+        }
+
+        class iterator
+        {
+        private:
+            pointer current;
+        public:
+            using Self = iterator;
+		public:
+			using value_type = value_type;
+			using pointer = pointer;
+			using reference = reference;
+			using difference_type = std::ptrdiff_t;
+			using iterator_category = std::random_access_iterator_tag;
+        public:
+            iterator() = delete;
+            virtual ~iterator() = default;
+        public: //move & copy member
+            iterator(const Self&) = default;
+            iterator(Self&&) = default;
+            Self& operator=(const Self&) = default;
+            Self& operator=(Self&&) = default;
+        public:
+            iterator(pointer p): current(p) 
+            {}
+        public: //move operator
+            Self& operator++()
+            {
+                current = current->next;
+                return *this;
+            }
+            Self operator++(int)
+            {
+                current = current->next;
+                return *this;
+            }
+            Self& operator--()
+            {
+                current = current->prev;
+                return *this;
+            }
+            Self operator--(int)
+            {
+                current = current->prev;
+                return *this;
+            }
+        public: //access operator
+            reference operator*()
+            {
+                return current->value;
+            }
+            const_reference operator*() const
+            {
+                return current->value;
+            }
+            pointer operator->()
+            {
+                return &current->value;
+            }
+            const_pointer operator->() const
+            {
+                return &current->value;
+            }
+        public: //comparer
+            bool operator==(const Self& other) const
+            {
+                return this->current == other.current;
+            }
+            bool operator!=(const Self& other) const
+            {
+                return this->current != other.current;
+            }
+        };
     };
 }
