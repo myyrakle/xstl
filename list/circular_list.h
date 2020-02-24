@@ -37,6 +37,23 @@ namespace xstl
 
 
     public:
+        reference front()
+        {
+            return this->_head->value;
+        }
+        const_reference front() const
+        {
+            return this->_head->value;
+        }
+        reference back()
+        {
+            return this->_head->prev->value;
+        }
+        const_reference back() const
+        {
+            return this->_head->prev->value;
+        }
+    public: //iterator
         iterator begin()
         {
             return iterator(this->_head);
