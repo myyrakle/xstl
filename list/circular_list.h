@@ -1,5 +1,6 @@
 #include <cassert>
 #include <utility>
+#include <iterator>
 
 namespace xstl
 {
@@ -26,7 +27,7 @@ namespace xstl
         node_type* _head = nullptr;
         size_type _length = 0;
 
-    public:
+    public: //list node type
         struct node_type
         {
             using Self = node_type;
@@ -47,10 +48,11 @@ namespace xstl
 
     public:
         circular_list() = default;
-        virtual ~circular_list()
+        ~circular_list()
         {
 			this->clear();
         }
+
 	public:
 		circular_list(size_type count, const_reference value = value_type())
 		{
@@ -90,11 +92,27 @@ namespace xstl
 				this->push_back(*begin);
 		}
         
-    public:
-        circular_list(const Self&);
-        circular_list(Self&&);
-        Self& operator=(const Self&);
-        Self& operator=(Self&&);
+    public: // copy&move member
+		circular_list(const Self& other): circular_list(other.begin(), other.end())
+		{}
+		circular_list(Self&& other): _head(other._head), _length(other._length)
+		{
+			other._head = nullptr;
+			other._length = 0;
+		}
+		Self& operator=(const Self& other)
+		{
+			this->assign(other.begin(), other.end());
+			return *this;
+		}
+		Self& operator=(Self&& other)
+		{
+			this->_head = other._head;
+			this->_length = other._length;
+			other._head = nullptr;
+			other._length = 0;
+			return *this;
+		}
 
     public: //Element Access
         reference front()
@@ -270,7 +288,7 @@ namespace xstl
 			}
 
 			_length++;
-
+		}
 
     public: //iterator
         iterator begin()
@@ -282,11 +300,21 @@ namespace xstl
             return iterator(nullptr);
         }
 
+	public: //reverse iterator
+		reverse_iterator rbegin()
+		{
+			return reverse_iterator(this->_head);
+		}
+		reverse_iterator rend()
+		{
+			return reverse_iterator(nullptr);
+		}
+
 	public:
         class iterator
         {
         private:
-            pointer current;
+            node_type* current;
         public:
             using Self = iterator;
 		public:
@@ -294,7 +322,7 @@ namespace xstl
 			using pointer = pointer;
 			using reference = reference;
 			using difference_type = std::ptrdiff_t;
-			using iterator_category = std::random_access_iterator_tag;
+			using iterator_category = std::bidirectional_iterator_tag;
         public:
             iterator() = delete;
             virtual ~iterator() = default;
@@ -304,44 +332,52 @@ namespace xstl
             Self& operator=(const Self&) = default;
             Self& operator=(Self&&) = default;
         public:
-            iterator(pointer p): current(p) 
+            iterator(node_type* p): current(p) 
             {}
         public: //move operator
             Self& operator++()
             {
+				assert(current!=nullptr);
                 current = current->next;
                 return *this;
             }
             Self operator++(int)
             {
+				assert(current != nullptr);
                 current = current->next;
                 return *this;
             }
             Self& operator--()
             {
+				assert(current != nullptr);
                 current = current->prev;
                 return *this;
             }
             Self operator--(int)
             {
+				assert(current != nullptr);
                 current = current->prev;
                 return *this;
             }
         public: //access operator
             reference operator*()
             {
+				assert(current != nullptr);
                 return current->value;
             }
             const_reference operator*() const
             {
+				assert(current != nullptr);
                 return current->value;
             }
             pointer operator->()
             {
+				assert(current != nullptr);
                 return &current->value;
             }
             const_pointer operator->() const
             {
+				assert(current != nullptr);
                 return &current->value;
             }
         public: //comparer
