@@ -1,4 +1,5 @@
 #include <cassert>
+#include <utility>
 
 namespace xstl
 {
@@ -60,18 +61,22 @@ namespace xstl
     public:
         reference front()
         {
+			assert(this->_head != nullptr);
             return this->_head->value;
         }
         const_reference front() const
         {
+			assert(this->_head != nullptr);
             return this->_head->value;
         }
         reference back()
         {
+			assert(this->_head != nullptr);
             return this->_head->prev->value;
         }
         const_reference back() const
         {
+			assert(this->_head != nullptr);
             return this->_head->prev->value;
         }
     public:
@@ -91,10 +96,44 @@ namespace xstl
             
             _length++;
         }
-        // void push_front(value_type&& value)
-        // {
+        void push_front(value_type&& value)
+        {
+			if (this->_head == nullptr)
+			{
+				this->_head = new node_type(nullptr, std::move(value), nullptr);
+				_head->prev = _head;
+				_head->next = _head;
+			}
+			else
+			{
+				this->_head = new node_type(this->_head->prev, value, this->_head);
+				_head->next->prev = _head;
+			}
 
-        // }
+			_length++;
+        }
+		void pop_front()
+		{
+			assert(this->_head != nullptr);
+
+			auto original_head = this->_head;
+			this->_head = this->_head->next;
+			this->_head->prev = original_head->prev;
+			delete original_head;
+
+			this->_length--;
+		}
+		void pop_back()
+		{
+			assert(this->_head != nullptr);
+
+			auto original_back = this->_head->prev;
+			//this->_head = this->_head->next;
+			//this->_head->prev = temp->prev;
+			//delete temp;
+
+			this->_length--;
+		}
     public: //iterator
         iterator begin()
         {
