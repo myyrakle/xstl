@@ -58,7 +58,7 @@ namespace xstl
         Self& operator=(const Self&);
         Self& operator=(Self&&);
 
-    public:
+    public: //Element Access
         reference front()
         {
 			assert(this->_head != nullptr);
@@ -79,7 +79,25 @@ namespace xstl
 			assert(this->_head != nullptr);
             return this->_head->prev->value;
         }
-    public:
+
+    public: //Capacity
+		bool empty() const
+		{
+			return this->_length == 0;
+		}
+		size_type size() const
+		{
+			return this->_length;
+		}
+
+	public:
+		void clear()
+		{
+			if (!this->empty())
+				this->pop_front();
+		}
+
+	public: //front modifier
         void push_front(const_reference value)
         {
             if(this->_head==nullptr)
@@ -123,14 +141,50 @@ namespace xstl
 
 			this->_length--;
 		}
+		template <class... Args>
+		void emplace_front(Args&&... args)
+		{
+			if (this->_head == nullptr)
+			{
+				this->_head = new node_type(nullptr, value_type(std::forward<Args>(args)...), nullptr);
+				_head->prev = _head;
+				_head->next = _head;
+			}
+			else
+			{
+				this->_head = new node_type(this->_head->prev, value_type(std::forward<Args>(args)...), this->_head);
+				_head->next->prev = _head;
+			}
+
+			_length++;
+		}
+
+	public: // back modifier
+		void push_back(const_reference value)
+		{
+			if (this->_head == nullptr)
+			{
+				this->_head = new node_type(nullptr, value, nullptr);
+				_head->prev = _head;
+				_head->next = _head;
+			}
+			else
+			{
+				this->_head->prev = new node_type(this->_head->prev, value, this->_head);
+				this->_head->prev->prev->next = this->_head->prev;
+			}
+
+			_length++;
+		}
+
 		void pop_back()
 		{
 			assert(this->_head != nullptr);
 
 			auto original_back = this->_head->prev;
-			//this->_head = this->_head->next;
-			//this->_head->prev = temp->prev;
-			//delete temp;
+			this->_head->prev = original_back->prev;
+			original_back->prev->next = this->_head;
+			delete original_back;
 
 			this->_length--;
 		}
