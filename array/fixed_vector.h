@@ -27,17 +27,14 @@ namespace xstl
 		using const_pointer = const value_type*;
 		class iterator;
 		class const_iterator;
-		using reverse_iterator = std::reverse_iterator<iterator>;
-		using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+		using reverse_iterator = std::reverse_iterator<fixed_vector::iterator>;
+		using const_reverse_iterator = std::reverse_iterator<fixed_vector::const_iterator>;
 
 	private:
 		T* _array = nullptr;
 		size_type _length = 0;
 	public:
-		fixed_vector(size_type length) : _array(new value_type[length]), _length(length)
-		{}
-
-		fixed_vector(size_type length, const_reference value) : _array(new value_type[length]), _length(length)
+		fixed_vector(size_type length, const_reference value=value_type()) : _array(new value_type[length]), _length(length)
 		{
 			for (int i = 0; i < this->_length; i++)
 				_array[i] = value;
@@ -66,7 +63,7 @@ namespace xstl
 		}
 	public:
 		fixed_vector() = default;
-		virtual ~fixed_vector()
+		~fixed_vector()
 		{
 			if (this->_array != nullptr)
 				delete[] this->_array;
@@ -131,11 +128,11 @@ namespace xstl
 				throw std::out_of_range();
 			return this->_array[index];
 		}
-		pointer data()
+		pointer data() noexcept
 		{
 			return this->_array;
 		}
-		const_pointer data() const
+		const_pointer data() const noexcept
 		{
 			return this->_array;
 		}
@@ -159,15 +156,11 @@ namespace xstl
 			}
 		}
 
-		void assign(size_type length)
+		void assign(size_type length, const_reference value = value_type())
 		{
 			this->clear();
 			this->_length = length;
 			this->_array = new value_type[length];
-		}
-		void assign(size_type length, const_reference value)
-		{
-			this->assign(length);
 			for (int i = 0; i < this->_length; i++)
 				_array[i] = value;
 		}
@@ -209,55 +202,55 @@ namespace xstl
 	public: //iterator 
 		iterator begin()
 		{
-			return iterator(this->_array);
+			return fixed_vector::iterator(this->_array);
 		}
-		const_iterator begin() const noexcept
+		fixed_vector::const_iterator begin() const noexcept
 		{
 			return this->cbegin();
 		}
-		const_iterator cbegin() const noexcept
+		fixed_vector::const_iterator cbegin() const noexcept
 		{
-			return const_iterator(this->_array);
+			return fixed_vector::const_iterator(this->_array);
 		}
 
-		iterator end()
+		fixed_vector::iterator end()
 		{
-			return iterator(this->_array + this->_length);
+			return fixed_vector::iterator(this->_array + this->_length);
 		}
-		const_iterator end() const noexcept
+		fixed_vector::const_iterator end() const noexcept
 		{
 			return this->cend();
 		}
-		const_iterator cend() const noexcept
+		fixed_vector::const_iterator cend() const noexcept
 		{
-			return const_iterator(this->_array + this->_length);
+			return fixed_vector::const_iterator(this->_array + this->_length);
 		}
 
 	public: //reverse iterator
-		reverse_iterator rbegin()
+		fixed_vector::reverse_iterator rbegin()
 		{
-			return reverse_iterator(this->end());
+			return fixed_vector::reverse_iterator(this->end());
 		}
-		const_reverse_iterator rbegin() const noexcept
+		fixed_vector::const_reverse_iterator rbegin() const noexcept
 		{
 			return this->crbegin();
 		}
-		const_reverse_iterator crbegin() const noexcept
+		fixed_vector::const_reverse_iterator crbegin() const noexcept
 		{
-			return const_reverse_iterator(this->cend());
+			return fixed_vector::const_reverse_iterator(this->cend());
 		}
         
-		reverse_iterator rend()
+		fixed_vector::reverse_iterator rend()
 		{
-			return reverse_iterator(this->begin());
+			return fixed_vector::reverse_iterator(this->begin());
 		}
-		const_reverse_iterator rend() const noexcept
+		fixed_vector::const_reverse_iterator rend() const noexcept
 		{
 			return this->crend();
 		}
-		const_reverse_iterator crend() const noexcept
+		fixed_vector::const_reverse_iterator crend() const noexcept
 		{
-			return const_reverse_iterator(this->cbegin());
+			return fixed_vector::const_reverse_iterator(this->cbegin());
 		}
         
         class iterator
@@ -267,9 +260,9 @@ namespace xstl
         public:
             using Self = iterator;
 		public:
-			using value_type = value_type;
-			using pointer = pointer;
-			using reference = reference;
+			using value_type = fixed_vector::value_type;
+			using pointer = fixed_vector::pointer;
+			using reference = fixed_vector::reference;
 			using difference_type = std::ptrdiff_t;
 			using iterator_category = std::random_access_iterator_tag;
         public:
@@ -305,27 +298,27 @@ namespace xstl
                 return *this;
             }
         public: //access operator
-            reference operator*()
+			reference operator*()
             {
                 return *current;
             }
-            const_reference operator*() const
+			const_reference operator*() const
             {
                 return *current;
             }
-            reference operator[](size_type index)
+			reference operator[](size_type index)
             {
                 return current[index];
             }
-            const_reference operator[](size_type index) const
+			const_reference operator[](size_type index) const
             {
                 return current[index];
             }
-            pointer operator->()
+			pointer operator->()
             {
                 return current;
             }
-            const_pointer operator->() const
+			const_pointer operator->() const
             {
                 return current;
             }

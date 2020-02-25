@@ -49,8 +49,46 @@ namespace xstl
         circular_list() = default;
         virtual ~circular_list()
         {
-
+			this->clear();
         }
+	public:
+		circular_list(size_type count, const_reference value = value_type())
+		{
+			for (int i = 0; i < count; i++)
+				this->push_back(value);
+		}
+		circular_list(std::initializer_list<value_type> init)
+		{
+			for (auto& e : init)
+				this->push_back(e);
+		}
+		template <class InputIterator>
+		circular_list(InputIterator begin, InputIterator end)
+		{
+			for (; begin != end; begin++)
+				this->push_back(*begin);
+		}
+
+	public:
+		void assign(size_type count, const_reference value = value_type())
+		{
+			this->clear();
+			for (int i = 0; i < count; i++)
+				this->push_back(value);
+		}
+		void assign(std::initializer_list<value_type> init)
+		{
+			this->clear();
+			for (auto& e : init)
+				this->push_back(e);
+		}
+		template <class InputIterator>
+		void assign(InputIterator begin, InputIterator end)
+		{
+			this->clear();
+			for (; begin != end; begin++)
+				this->push_back(*begin);
+		}
         
     public:
         circular_list(const Self&);
@@ -81,20 +119,32 @@ namespace xstl
         }
 
     public: //Capacity
-		bool empty() const
+		bool empty() const noexcept
 		{
 			return this->_length == 0;
 		}
-		size_type size() const
+		size_type size() const noexcept
 		{
 			return this->_length;
 		}
 
 	public:
-		void clear()
+		void clear() noexcept
 		{
 			if (!this->empty())
 				this->pop_front();
+		}
+
+		void swap(Self& other) noexcept
+		{
+			auto temp_head = this->_head;
+			auto temp_length = this->_length;
+
+			this->_head = other._head;
+			this->_length = other._length;
+
+			other._head = temp_head;
+			other._length = temp_length;
 		}
 
 	public: //front modifier
@@ -176,7 +226,22 @@ namespace xstl
 
 			_length++;
 		}
+		void push_back(value_type&& value)
+		{
+			if (this->_head == nullptr)
+			{
+				this->_head = new node_type(nullptr, std::move(value), nullptr);
+				_head->prev = _head;
+				_head->next = _head;
+			}
+			else
+			{
+				this->_head->prev = new node_type(this->_head->prev, std::move(value), this->_head);
+				this->_head->prev->prev->next = this->_head->prev;
+			}
 
+			_length++;
+		}
 		void pop_back()
 		{
 			assert(this->_head != nullptr);
@@ -188,6 +253,25 @@ namespace xstl
 
 			this->_length--;
 		}
+		
+		template <class... Args>
+		void emplace_back(Args&&... args)
+		{
+			if (this->_head == nullptr)
+			{
+				this->_head = new node_type(nullptr, value_type(std::forward<Args>(args)...), nullptr);
+				_head->prev = _head;
+				_head->next = _head;
+			}
+			else
+			{
+				this->_head->prev = new node_type(this->_head->prev, value_type(std::forward<Args>(args)...), this->_head);
+				this->_head->prev->prev->next = this->_head->prev;
+			}
+
+			_length++;
+
+
     public: //iterator
         iterator begin()
         {
@@ -198,6 +282,7 @@ namespace xstl
             return iterator(nullptr);
         }
 
+	public:
         class iterator
         {
         private:
