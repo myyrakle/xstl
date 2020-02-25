@@ -1,4 +1,4 @@
-
+#include <cassert>
 
 namespace xstl
 {
@@ -6,7 +6,7 @@ namespace xstl
     class circular_list
     {
     public:
-		using Self = fixed_vector;
+		using Self = circular_list;
 
 	public: //stl standard type member
 		using value_type = T;
@@ -33,8 +33,29 @@ namespace xstl
             Self* prev;
             value_type value;
             Self* next;
+        public:
+            node_type() = delete;
+            virtual ~node_type() = default;
+            node_type(Self* _prev, const_reference _value, Self* _next)
+                : prev(_prev), value(_value), next(_next)
+            {}
+            node_type(Self* _prev, value_type&& _value, Self* _next)
+                : prev(_prev), value(std::move(_value)), next(_next)
+            {}
         };
 
+    public:
+        circular_list() = default;
+        virtual ~circular_list()
+        {
+
+        }
+        
+    public:
+        circular_list(const Self&);
+        circular_list(Self&&);
+        Self& operator=(const Self&);
+        Self& operator=(Self&&);
 
     public:
         reference front()
@@ -53,6 +74,27 @@ namespace xstl
         {
             return this->_head->prev->value;
         }
+    public:
+        void push_front(const_reference value)
+        {
+            if(this->_head==nullptr)
+            {
+                this->_head = new node_type(nullptr, value, nullptr);
+                _head->prev = _head; 
+                _head->next = _head;
+            }
+            else
+            {
+                this->_head = new node_type(this->_head->prev, value, this->_head);
+				_head->next->prev = _head;
+            }
+            
+            _length++;
+        }
+        // void push_front(value_type&& value)
+        // {
+
+        // }
     public: //iterator
         iterator begin()
         {
