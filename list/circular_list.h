@@ -290,6 +290,22 @@ namespace xstl
 			_length++;
 		}
 
+	public:
+		iterator insert(const_iterator pos, const_reference value);
+		iterator insert(const_iterator pos, value_type&& value);
+		iterator insert(const_iterator pos, size_type count, const_reference value);
+		template <class InputIterator>
+		iterator insert(const_iterator pos, InputIterator begin, InputIterator end);
+		iterator insert(const_iterator pos, std::initializer_list<T> init);
+
+		template <class... Args>
+		iterator emplace(const_iterator pos, Args&&... args);
+
+		iterator erase(const_iterator pos);
+		iterator erase(const_iterator begin, const_iterator end);
+
+		void resize(size_type count, const_reference new_value = value_type());
+
     public: //iterator
         iterator begin()
         {
@@ -299,6 +315,22 @@ namespace xstl
         {
             return iterator(nullptr);
         }
+		const_iterator begin() const
+		{
+			return this->cbegin();
+		}
+		const_iterator end() const
+		{
+			return this->cend();
+		}
+		const_iterator cbegin() const
+		{
+			return const_iterator(this->_head);
+		}
+		const_iterator cend() const
+		{
+			return const_iterator(nullptr);
+		}
 
 	public: //reverse iterator
 		reverse_iterator rbegin()
@@ -308,6 +340,22 @@ namespace xstl
 		reverse_iterator rend()
 		{
 			return reverse_iterator(nullptr);
+		}
+		const_reverse_iterator rbegin() const
+		{
+			return this->cbegin();
+		}
+		const_reverse_iterator rend() const
+		{
+			return this->cend();
+		}
+		const_reverse_iterator crbegin() const
+		{
+			return const_reverse_iterator(this->_head);
+		}
+		const_reverse_iterator crend() const
+		{
+			return const_reverse_iterator(nullptr);
 		}
 
 	public:
@@ -390,5 +438,75 @@ namespace xstl
                 return this->current != other.current;
             }
         };
+
+		class const_iterator
+		{
+		private:
+			const node_type* current;
+		public:
+			using Self = const_iterator;
+		public:
+			using value_type = value_type;
+			using pointer = pointer;
+			using reference = reference;
+			using difference_type = std::ptrdiff_t;
+			using iterator_category = std::bidirectional_iterator_tag;
+		public:
+			const_iterator() = delete;
+			~const_iterator() = default;
+		public: //move & copy member
+			const_iterator(const Self&) = default;
+			const_iterator(Self&&) = default;
+			Self& operator=(const Self&) = default;
+			Self& operator=(Self&&) = default;
+		public:
+			const_iterator(node_type* p) : current(p)
+			{}
+		public: //move operator
+			Self& operator++()
+			{
+				assert(current != nullptr);
+				current = current->next;
+				return *this;
+			}
+			Self operator++(int)
+			{
+				assert(current != nullptr);
+				current = current->next;
+				return *this;
+			}
+			Self& operator--()
+			{
+				assert(current != nullptr);
+				current = current->prev;
+				return *this;
+			}
+			Self operator--(int)
+			{
+				assert(current != nullptr);
+				current = current->prev;
+				return *this;
+			}
+		public: //access operator
+			const_reference operator*() const
+			{
+				assert(current != nullptr);
+				return current->value;
+			}
+			const_pointer operator->() const
+			{
+				assert(current != nullptr);
+				return &current->value;
+			}
+		public: //comparer
+			bool operator==(const Self& other) const
+			{
+				return this->current == other.current;
+			}
+			bool operator!=(const Self& other) const
+			{
+				return this->current != other.current;
+			}
+		};
     };
 }
