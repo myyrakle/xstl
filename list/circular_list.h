@@ -297,19 +297,70 @@ namespace xstl
 		{
 			auto& before = const_cast<node_type*&>(pos.current);
 			auto& after = pos.current->next;
-			before->next = new node_type(after->prev, value, after);
+			before->next = new node_type(before, value, after);
 			after->prev = before->next;
 
+			this->_length++;
 			return iterator(before->next);
 		}
-		/*iterator insert(const_iterator pos, value_type&& value);
-		iterator insert(const_iterator pos, size_type count, const_reference value);
+		iterator insert(const_iterator pos, value_type&& value)
+		{
+			auto& before = const_cast<node_type*&>(pos.current);
+			auto& after = pos.current->next;
+			before->next = new node_type(before, std::move(value), after);
+			after->prev = before->next;
+
+			this->_length++;
+			return iterator(before->next);
+		}
+
+		iterator insert(const_iterator pos, size_type count, const_reference value)
+		{
+			auto position = pos;
+
+			for (int i = 0; i < count; i++)
+			{
+				position = this->insert(position, value);
+			}
+
+			return iterator(pos.current->next);
+		}
+
 		template <class InputIterator>
-		iterator insert(const_iterator pos, InputIterator begin, InputIterator end);
-		iterator insert(const_iterator pos, std::initializer_list<T> init);*/
+		iterator insert(const_iterator pos, InputIterator begin, InputIterator end)
+		{
+			auto position = pos;
+
+			for (begin!=end; begin++)
+			{
+				position = this->insert(position, *begin);
+			}
+
+			return iterator(pos.current->next);
+		}
+		iterator insert(const_iterator pos, std::initializer_list<T> init)
+		{
+			auto position = pos;
+
+			for (auto& e:init)
+			{
+				position = this->insert(position, e);
+			}
+
+			return iterator(pos.current->next);
+		}
 
 		template <class... Args>
-		iterator emplace(const_iterator pos, Args&&... args);
+		iterator emplace(const_iterator pos, Args&&... args)
+		{
+			auto& before = const_cast<node_type*&>(pos.current);
+			auto& after = pos.current->next;
+			before->next = new node_type(before, value_type(std::forward<Args>(args)...) , after);
+			after->prev = before->next;
+
+			this->_length++;
+			return iterator(before->next);
+		}
 
 		iterator erase(const_iterator pos);
 		iterator erase(const_iterator begin, const_iterator end);
