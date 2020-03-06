@@ -432,7 +432,25 @@ namespace xstl
 			return iterator(after);
 		}
 
-		void resize(size_type count, const_reference new_value = value_type());
+		void resize(size_type count, const_reference new_value = value_type())
+		{
+			if(count > this->_length)
+			{ 
+				size_type difference = count - _length;
+				for (int i = 0; i < difference; i++)
+					this->push_back(new_value);
+			}
+			else if (count == this->_length)
+			{
+				//Nothing To Do
+			}
+			else
+			{
+				size_type difference = _length - count;
+				for (int i = 0; i < difference; i++)
+					this->pop_back();
+			}
+		}
 
     public: //iterator
         iterator begin()
