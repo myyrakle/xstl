@@ -331,7 +331,7 @@ namespace xstl
 		{
 			auto position = pos;
 
-			for (begin!=end; begin++)
+			for (;begin!=end; begin++)
 			{
 				position = this->insert(position, *begin);
 			}

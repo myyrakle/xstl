@@ -259,6 +259,7 @@ namespace xstl
             pointer current;
         public:
             using Self = iterator;
+			friend const_iterator;
 		public:
 			using value_type = fixed_vector::value_type;
 			using pointer = fixed_vector::pointer;
@@ -355,6 +356,8 @@ namespace xstl
 			Self& operator=(Self&&) = default;
 		public:
 			const_iterator(const_pointer p) : current(p)
+			{}
+			const_iterator(iterator it) : current(it.current)
 			{}
 		public: //move operator
 			Self& operator++()
