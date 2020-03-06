@@ -200,17 +200,27 @@ namespace xstl
 
 			_length++;
         }
+		
 		void pop_front()
 		{
 			assert(this->_head != nullptr);
 
-			auto original_head = this->_head;
-			this->_head = this->_head->next;
-			this->_head->prev = original_head->prev;
-			delete original_head;
-
+			if (this->_length == 1)
+			{
+				delete this->_head;
+				this->_head = nullptr;
+			}
+			else 
+			{
+				auto original_head = this->_head;
+				this->_head = this->_head->next;
+				this->_head->prev = original_head->prev;
+				delete original_head;
+			}
+			
 			this->_length--;
 		}
+		
 		template <class... Args>
 		void emplace_front(Args&&... args)
 		{
@@ -262,15 +272,24 @@ namespace xstl
 
 			_length++;
 		}
+
 		void pop_back()
 		{
 			assert(this->_head != nullptr);
 
-			auto original_back = this->_head->prev;
-			this->_head->prev = original_back->prev;
-			original_back->prev->next = this->_head;
-			delete original_back;
-
+			if (this->_length == 1)
+			{
+				delete this->_head;
+				this->_head = nullptr;
+			}
+			else 
+			{
+				auto original_back = this->_head->prev;
+				this->_head->prev = original_back->prev;
+				original_back->prev->next = this->_head;
+				delete original_back;
+			}
+			
 			this->_length--;
 		}
 		
@@ -362,8 +381,56 @@ namespace xstl
 			return iterator(before->next);
 		}
 
-		iterator erase(const_iterator pos);
-		iterator erase(const_iterator begin, const_iterator end);
+		iterator erase(const_iterator pos)
+		{
+			assert(this->_head != nullptr);
+
+			this->_length--;
+
+			if (this->_length == 1)
+			{
+				assert(this->_head == pos.current);
+				this->_head = nullptr;
+
+				return iterator(nullptr);
+			}
+			else
+			{
+				auto& before = pos.current->prev;
+				auto& after = pos.current->next;
+
+				if (this->_head == pos.current)
+					this->_head = after;
+
+				before->next = after;
+				after->prev = before;
+
+				delete pos.current;
+
+				return iterator(after);
+			}
+		}
+		iterator erase(const_iterator begin, const_iterator end)
+		{
+			auto& before = const_cast<node_type*&>(begin.current->prev);
+			auto& after = const_cast<node_type*&>(end.current);
+
+			before->next = after;
+			after->prev = before;
+
+			if (this->_head == begin.current)
+				this->_head = after;
+
+			while (begin != end)
+			{
+				auto temp = begin.current;
+				begin++;
+				delete temp;
+				this->_length--;
+			}
+
+			return iterator(after);
+		}
 
 		void resize(size_type count, const_reference new_value = value_type());
 
