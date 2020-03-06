@@ -147,12 +147,14 @@ namespace xstl
 		}
 
 	public:
+		//Clear All Data
 		void clear() noexcept
 		{
 			if (!this->empty())
 				this->pop_front();
 		}
 
+		//Swap
 		void swap(Self& other) noexcept
 		{
 			auto temp_head = this->_head;
@@ -291,12 +293,20 @@ namespace xstl
 		}
 
 	public:
-		iterator insert(const_iterator pos, const_reference value);
-		iterator insert(const_iterator pos, value_type&& value);
+		iterator insert(const_iterator pos, const_reference value)
+		{
+			auto& before = const_cast<node_type*&>(pos.current);
+			auto& after = pos.current->next;
+			before->next = new node_type(after->prev, value, after);
+			after->prev = before->next;
+
+			return iterator(before->next);
+		}
+		/*iterator insert(const_iterator pos, value_type&& value);
 		iterator insert(const_iterator pos, size_type count, const_reference value);
 		template <class InputIterator>
 		iterator insert(const_iterator pos, InputIterator begin, InputIterator end);
-		iterator insert(const_iterator pos, std::initializer_list<T> init);
+		iterator insert(const_iterator pos, std::initializer_list<T> init);*/
 
 		template <class... Args>
 		iterator emplace(const_iterator pos, Args&&... args);
@@ -365,6 +375,8 @@ namespace xstl
             node_type* current;
         public:
             using Self = iterator;
+			friend const_iterator;
+			friend circular_list;
 		public:
 			using value_type = value_type;
 			using pointer = pointer;
@@ -445,6 +457,7 @@ namespace xstl
 			const node_type* current;
 		public:
 			using Self = const_iterator;
+			friend circular_list;
 		public:
 			using value_type = value_type;
 			using pointer = pointer;
@@ -461,6 +474,8 @@ namespace xstl
 			Self& operator=(Self&&) = default;
 		public:
 			const_iterator(node_type* p) : current(p)
+			{}
+			const_iterator(const iterator& mutable_iterator): current(mutable_iterator.current)
 			{}
 		public: //move operator
 			Self& operator++()
