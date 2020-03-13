@@ -1,7 +1,7 @@
 namespace xstl
 {
     template<class T>
-    class sorted_aray
+    class sorted_array
     {
     public:
 		using Self = sorted_array;
@@ -22,6 +22,20 @@ namespace xstl
 	private:
 		T* _array = nullptr;
 		size_type _length = 0;
+
+	public:
+		sorted_array() = default;
+		~sorted_array() = default;
+	public:
+		sorted_array(const Self&) = default;
+		sorted_array(Self&&) = default;
+		Self& operator=(const Self&) = default;
+		Self& operator=(Self&&) = default;
+	public:
+		sorted_array(std::initializer_list<T>);
+		template <class InputIterator>
+		sorted_array(InputIterator begin, InputIterator end);
+		sorted_array(size_type count, const value_type& value);
     };
 
     
