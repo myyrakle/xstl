@@ -8,14 +8,14 @@ C++11
 
 
 array
-- fixed_array
+- fixed_array : complete
 - sorted_array
   
 heap
 - heap
 
 list
-- circular_list
+- circular_list : complete
 - skip_list
 
 tree
