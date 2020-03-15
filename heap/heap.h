@@ -22,16 +22,14 @@ namespace xstl
 	public:
 		using container_type = Container;
 		using value_type = typename Container::value_type;
-		using size_type = typename std::vector<T>::size_type;
-		using allocator_type = typename std::vector<T>::allocator_type;
-		using difference_type = typename std::vector<T>::difference_type;
-		using refernce = typename std::vector<T>::reference;
-		using const_reference = typename std::vector<T>::const_reference;
-		using pointer = typename std::vector<T>::pointer;
-		using const_pointer = typename std::vector<T>::const_pointer;
+		using size_type = typename Container::size_type;
+		using refernce = typename Container::reference;
+		using const_reference = typename Container::const_reference;
+		using pointer = typename Container::pointer;
+		using const_pointer = typename Container::const_pointer;
 		
 	private:
-		Container<value_type> datas;
+		Container datas;
 	public:
 		heap() = default;
 		virtual ~heap() = default;
