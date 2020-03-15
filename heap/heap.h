@@ -106,23 +106,23 @@ namespace xstl
 		}
 
 	public:
-		void clear()
+		void clear() noexcept
 		{
 			return datas.clear();
 		}
-		bool empty() const
+		bool empty() const noexcept
 		{
 			return datas.empty();
 		}
-		bool not_empty() const
+		bool not_empty() const noexcept
 		{
 			return !datas.empty();
 		}
-		size_t size() const
+		size_t size() const noexcept
 		{
 			return datas.size();
 		}
-		size_t max_size() const
+		size_t max_size() const noexcept
 		{
 			return datas.max_size();
 		}
