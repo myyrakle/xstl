@@ -87,7 +87,7 @@ namespace xstl
 			this->_make_heap();
 		}
 
-	public: //vector와의 호환용
+	public: //container와의 호환용
 		heap(const Container& vec) : _container(vec)
 		{
 			this->_make_heap();
@@ -101,7 +101,7 @@ namespace xstl
 			return this->_container;
 		}
 
-	public:
+	public: //return sorted container
 		Container sorted() const
 		{
 			Container clone = this->_container;
@@ -149,13 +149,11 @@ namespace xstl
 		{
 			this->_container.swap(other._container);
 		}
+
+	public:
 		bool empty() const noexcept
 		{
 			return _container.empty();
-		}
-		bool not_empty() const noexcept
-		{
-			return !_container.empty();
 		}
 		size_type size() const noexcept
 		{
