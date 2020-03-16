@@ -153,13 +153,9 @@ namespace xstl
 		{
 			return !_container.empty();
 		}
-		size_t size() const noexcept
+		size_type size() const noexcept
 		{
 			return _container.size();
-		}
-		size_t max_size() const noexcept
-		{
-			return _container.max_size();
 		}
 	};
 }
