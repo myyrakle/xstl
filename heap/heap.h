@@ -29,50 +29,68 @@ namespace xstl
 		using const_pointer = typename Container::const_pointer;
 		
 	private:
-		Container datas;
+		Container _container;
+	private:
+		void _push_heap()
+		{
+			std::push_heap(_container.begin(), _container.end(), Compare());
+		}
+		void _make_heap()
+		{
+			std::make_heap(_container.begin(), _container.end(), Compare());
+		}
+	
 	public:
 		heap() = default;
 		virtual ~heap() = default;
 	public: //기본 생성/대입자
-		heap(const heap&) = default;
-		heap(heap&&) = default;
-		heap& operator=(const heap&) = default;
-		heap& operator=(heap&&) = default;
+		heap(const Self&) = default;
+		heap(Self&&) = default;
+		Self& operator=(const Self&) = default;
+		Self& operator=(Self&&) = default;
 
 	public: //constructor
-		heap(std::initializer_list<value_type> init) : datas(init)
+		heap(std::initializer_list<value_type> init) : _container(init)
 		{
-			this->make_heap();
+			this->_make_heap();
 		}
-		
+		template<class InputIterator>
+		heap(InputIterator begin, InputIterator end): _container(begin, end)
+		{
+			this->_make_heap();
+		}
+		heap(size_type count, const_reference value): _container(count, value)
+		{
+			this->_make_heap();
+		}
 
 	public:
 		heap& operator=(std::initializer_list<value_type> init)
 		{
-			datas = init;
-			this->make_heap();
+			_container = init;
+			this->_make_heap();
 		}
 
 	public: //vector와의 호환용
-		heap(const Container& vec) : datas(vec)
+		heap(const Container& vec) : _container(vec)
 		{
-			this->make_heap();
+			this->_make_heap();
 		}
-		heap(Container&& vec): datas(vec)
+		heap(Container&& vec): _container(vec)
 		{
-			this->make_heap();
+			this->_make_heap();
 		}
 
 	public: //vector와의 호환용
 		operator Container&() const
 		{
-			return this->data;
+			return this->_container;
 		}
 
 	public:
 		Container sorted() const
 		{
-			Container clone = this->datas;
+			Container clone = this->_container;
 			std::sort_heap(clone.begin(), clone.end(), Compare());
 			return clone;
 		}
@@ -80,65 +98,54 @@ namespace xstl
 	public: //최대 힙을 기준으로, 최대값을 가져옵니다.
 		const_reference front() const
 		{
-			return datas.front();
+			return _container.front();
 		}
 
 	public: //요소를 추가합니다.
 		void push(const_reference value)
 		{
-			datas.push_back(value);
+			_container.push_back(value);
 			this->push_heap();
 		}
 		void push(value_type&& value)
 		{
-			datas.push_back(std::move(value));
+			_container.push_back(std::move(value));
 			this->push_heap();
 		}
 		template <class ...Args>
 		void emplace(Args&&... args)
 		{
-			datas.emplace_back(args...);
+			_container.emplace_back(std::forward<Args>(args)...);
 			this->push_heap();
 		}
 
 	public: //최대 힙을 기준으로, 최대값을 제거합니다.
 		void pop()
 		{
-			std::pop_heap(datas.begin(), datas.end(), Compare());
-			datas.pop_back();
+			std::pop_heap(_container.begin(), _container.end(), Compare());
+			_container.pop_back();
 		}
 
 	public:
 		void clear() noexcept
 		{
-			return datas.clear();
+			return _container.clear();
 		}
 		bool empty() const noexcept
 		{
-			return datas.empty();
+			return _container.empty();
 		}
 		bool not_empty() const noexcept
 		{
-			return !datas.empty();
+			return !_container.empty();
 		}
 		size_t size() const noexcept
 		{
-			return datas.size();
+			return _container.size();
 		}
 		size_t max_size() const noexcept
 		{
-			return datas.max_size();
-		}
-
-	private:
-		void push_heap()
-		{
-			std::push_heap(datas.begin(), datas.end(), Compare());
-		}
-		void make_heap()
-		{
-			std::make_heap(datas.begin(), datas.end(), Compare());
+			return _container.max_size();
 		}
 	};
-
 }

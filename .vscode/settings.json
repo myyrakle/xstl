@@ -3,6 +3,12 @@
         "list": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "tuple": "cpp",
+        "xhash": "cpp",
+        "xmemory": "cpp",
+        "xutility": "cpp"
     }
 }
