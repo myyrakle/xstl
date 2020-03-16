@@ -64,10 +64,26 @@ namespace xstl
 			this->_make_heap();
 		}
 
-	public:
 		heap& operator=(std::initializer_list<value_type> init)
 		{
 			_container = init;
+			this->_make_heap();
+		}
+	public:
+		void assign(size_type count, const_reference value)
+		{
+			_container.assign(count, value);
+			this->_make_heap();
+		}
+		void assign(std::initializer_list<value_type> init)
+		{
+			_container.assign(init);
+			this->_make_heap();
+		}
+		template <class InputIterator>
+		void assign(InputIterator begin, InputIterator end)
+		{
+			_container.assign(begin, end);
 			this->_make_heap();
 		}
 
@@ -80,8 +96,6 @@ namespace xstl
 		{
 			this->_make_heap();
 		}
-
-	public: //vector와의 호환용
 		operator Container&() const
 		{
 			return this->_container;

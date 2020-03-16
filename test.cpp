@@ -7,8 +7,9 @@ int main()
     using namespace std;
     using namespace xstl;
 
-    fixed_vector<int> v = {1,2,3,4,5};
-    cout<<v[1];
+    heap<int> h{1,4,3,2,5,0};
+
+    cout<<h.front();
 
     return 0;
 }
