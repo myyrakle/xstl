@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
-#include <functional> //less
+#include <algorithm> //heap functions
+#include <functional> //less, greater
 
 namespace xstl 
 {
@@ -144,6 +144,10 @@ namespace xstl
 		void clear() noexcept
 		{
 			return _container.clear();
+		}
+		void swap(Self& other) noexcept
+		{
+			this->_container.swap(other._container);
 		}
 		bool empty() const noexcept
 		{
