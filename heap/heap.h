@@ -39,54 +39,57 @@ namespace xstl
 		heap& operator=(const heap&) = default;
 		heap& operator=(heap&&) = default;
 
-	public: //중괄호 초기치 대응
-		heap(std::initializer_list<T> init) : datas(init)
+	public: //constructor
+		heap(std::initializer_list<value_type> init) : datas(init)
 		{
 			this->make_heap();
 		}
-		heap& operator=(std::initializer_list<T> init)
+		
+
+	public:
+		heap& operator=(std::initializer_list<value_type> init)
 		{
 			datas = init;
 			this->make_heap();
 		}
 
 	public: //vector와의 호환용
-		heap(const std::vector<T>& vec) : datas(vec)
+		heap(const Container& vec) : datas(vec)
 		{
 			this->make_heap();
 		}
-		heap(std::vector<T>&& vec): datas(vec)
+		heap(Container&& vec): datas(vec)
 		{
 			this->make_heap();
 		}
 
 	public: //vector와의 호환용
-		operator const std::vector<T>&() const
+		operator Container&() const
 		{
 			return this->data;
 		}
 
 	public:
-		std::vector<T> sorted() const
+		Container sorted() const
 		{
-			std::vector<T> clone = this->datas;
+			Container clone = this->datas;
 			std::sort_heap(clone.begin(), clone.end(), Compare());
 			return clone;
 		}
 
 	public: //최대 힙을 기준으로, 최대값을 가져옵니다.
-		const T& front() const
+		const_reference front() const
 		{
 			return datas.front();
 		}
 
 	public: //요소를 추가합니다.
-		void push(const T& value)
+		void push(const_reference value)
 		{
 			datas.push_back(value);
 			this->push_heap();
 		}
-		void push(T&& value)
+		void push(value_type&& value)
 		{
 			datas.push_back(std::move(value));
 			this->push_heap();
@@ -137,3 +140,5 @@ namespace xstl
 			std::make_heap(datas.begin(), datas.end(), Compare());
 		}
 	};
+
+}
