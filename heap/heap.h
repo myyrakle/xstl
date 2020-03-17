@@ -96,7 +96,7 @@ namespace xstl
 		{
 			this->_make_heap();
 		}
-		operator Container&() const
+		operator const Container&() const
 		{
 			return this->_container;
 		}
