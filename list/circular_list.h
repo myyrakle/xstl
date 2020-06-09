@@ -390,6 +390,7 @@ namespace xstl
             if (this->_length == 1)
             {
                 assert(this->_head == pos.current);
+                delete this->head;
                 this->_head = nullptr;
 
                 return iterator(nullptr);
