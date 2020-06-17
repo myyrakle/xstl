@@ -1,12 +1,13 @@
-#pragma once
+#ifndef __XSTL_HEAP__
+#define __XSTL_HEAP__
 
 #include <vector>
-#include <algorithm> //heap functions
+#include <algorithm>  //heap functions
 #include <functional> //less, greater
 
-namespace xstl 
+namespace xstl
 {
-    template <class T, class Compare = std::less<T>, class Container=std::vector<T> >
+    template <class T, class Compare = std::less<T>, class Container = std::vector<T>>
     class heap;
 
     template <class T>
@@ -19,6 +20,7 @@ namespace xstl
     {
     public:
         using Self = heap;
+
     public:
         using container_type = Container;
         using value_type = typename Container::value_type;
@@ -27,9 +29,10 @@ namespace xstl
         using const_reference = typename Container::const_reference;
         using pointer = typename Container::pointer;
         using const_pointer = typename Container::const_pointer;
-        
+
     private:
         Container _container;
+
     private:
         void _push_heap()
         {
@@ -39,36 +42,38 @@ namespace xstl
         {
             std::make_heap(_container.begin(), _container.end(), Compare());
         }
-    
+
     public:
         heap() = default;
         virtual ~heap() = default;
+
     public: //기본 생성/대입자
-        heap(const Self&) = default;
-        heap(Self&&) = default;
-        Self& operator=(const Self&) = default;
-        Self& operator=(Self&&) = default;
+        heap(const Self &) = default;
+        heap(Self &&) = default;
+        Self &operator=(const Self &) = default;
+        Self &operator=(Self &&) = default;
 
     public: //constructor
         heap(std::initializer_list<value_type> init) : _container(init)
         {
             this->_make_heap();
         }
-        template<class InputIterator>
-        heap(InputIterator begin, InputIterator end): _container(begin, end)
+        template <class InputIterator>
+        heap(InputIterator begin, InputIterator end) : _container(begin, end)
         {
             this->_make_heap();
         }
-        heap(size_type count, const_reference value): _container(count, value)
+        heap(size_type count, const_reference value) : _container(count, value)
         {
             this->_make_heap();
         }
 
-        heap& operator=(std::initializer_list<value_type> init)
+        heap &operator=(std::initializer_list<value_type> init)
         {
             _container = init;
             this->_make_heap();
         }
+
     public:
         void assign(size_type count, const_reference value)
         {
@@ -88,15 +93,15 @@ namespace xstl
         }
 
     public: //container와의 호환용
-        heap(const Container& vec) : _container(vec)
+        heap(const Container &vec) : _container(vec)
         {
             this->_make_heap();
         }
-        heap(Container&& vec): _container(vec)
+        heap(Container &&vec) : _container(vec)
         {
             this->_make_heap();
         }
-        operator const Container&() const
+        operator const Container &() const
         {
             return this->_container;
         }
@@ -121,13 +126,13 @@ namespace xstl
             _container.push_back(value);
             this->push_heap();
         }
-        void push(value_type&& value)
+        void push(value_type &&value)
         {
             _container.push_back(std::move(value));
             this->push_heap();
         }
-        template <class ...Args>
-        void emplace(Args&&... args)
+        template <class... Args>
+        void emplace(Args &&... args)
         {
             _container.emplace_back(std::forward<Args>(args)...);
             this->push_heap();
@@ -145,7 +150,7 @@ namespace xstl
         {
             return _container.clear();
         }
-        void swap(Self& other) noexcept
+        void swap(Self &other) noexcept
         {
             this->_container.swap(other._container);
         }
@@ -160,4 +165,6 @@ namespace xstl
             return _container.size();
         }
     };
-}
+} // namespace xstl
+
+#endif

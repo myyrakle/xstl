@@ -1,3 +1,6 @@
+#ifndef __XSTL_FIXED_VECTOR__
+#define __XSTL_FIXED_VECTOR__
+
 /*
     Runtime Fixed Length Array.
     Flexibility of use is lower than std::vector. 
@@ -21,20 +24,21 @@ namespace xstl
         using value_type = T;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
-        using reference = value_type & ;
-        using const_reference = const value_type&;
-        using pointer = value_type * ;
-        using const_pointer = const value_type*;
+        using reference = value_type &;
+        using const_reference = const value_type &;
+        using pointer = value_type *;
+        using const_pointer = const value_type *;
         class iterator;
         class const_iterator;
         using reverse_iterator = std::reverse_iterator<fixed_vector::iterator>;
         using const_reverse_iterator = std::reverse_iterator<fixed_vector::const_iterator>;
 
     private:
-        T* _array = nullptr;
+        T *_array = nullptr;
         size_type _length = 0;
+
     public:
-        fixed_vector(size_type length, const_reference value=value_type()) : _array(new value_type[length]), _length(length)
+        fixed_vector(size_type length, const_reference value = value_type()) : _array(new value_type[length]), _length(length)
         {
             for (int i = 0; i < this->_length; i++)
                 _array[i] = value;
@@ -43,14 +47,14 @@ namespace xstl
         fixed_vector(std::initializer_list<value_type> init) : _array(new value_type[init.size()]), _length(init.size())
         {
             int i = 0;
-            for (auto&&e : init)
+            for (auto &&e : init)
             {
                 _array[i] = e;
                 i++;
             }
         }
 
-        template<class InputIterator>
+        template <class InputIterator>
         fixed_vector(InputIterator begin, InputIterator end) : _length(std::distance(begin, end))
         {
             this->_array = new value_type[this->_length];
@@ -61,6 +65,7 @@ namespace xstl
                 i++;
             }
         }
+
     public:
         fixed_vector() = default;
         ~fixed_vector()
@@ -70,7 +75,7 @@ namespace xstl
         }
 
     public: //copy & move
-        fixed_vector(const Self& other)
+        fixed_vector(const Self &other)
         {
             this->_length = other._length;
             this->_array = new value_type[other._length];
@@ -78,14 +83,14 @@ namespace xstl
             for (int i = 0; i < other._length; i++)
                 this->_array[i] = other._array[i];
         }
-        fixed_vector(Self&& other)
+        fixed_vector(Self &&other)
         {
             this->_length = other._length;
             this->_array = other._array;
             other._length = 0;
             other._array = nullptr;
         }
-        Self& operator=(const Self& other)
+        Self &operator=(const Self &other)
         {
             this->clear();
 
@@ -97,7 +102,7 @@ namespace xstl
 
             return *this;
         }
-        Self& operator=(Self&& other) 
+        Self &operator=(Self &&other)
         {
             this->_length = other._length;
             this->_array = other._array;
@@ -146,6 +151,7 @@ namespace xstl
         {
             return this->_length;
         }
+
     public:
         void clear() noexcept
         {
@@ -168,7 +174,7 @@ namespace xstl
         {
             this->assign(init.size());
             int i = 0;
-            for (auto&&e : init)
+            for (auto &&e : init)
             {
                 _array[i] = e;
                 i++;
@@ -187,10 +193,10 @@ namespace xstl
             }
         }
 
-        void swap(Self& other) noexcept
+        void swap(Self &other) noexcept
         {
             size_type length_temp = other._length;
-            T* array_temp = other._array;
+            T *array_temp = other._array;
 
             other._length = this->_length;
             other._array = this->_array;
@@ -199,7 +205,7 @@ namespace xstl
             this->_array = array_temp;
         }
 
-    public: //iterator 
+    public: //iterator
         iterator begin()
         {
             return fixed_vector::iterator(this->_array);
@@ -239,7 +245,7 @@ namespace xstl
         {
             return fixed_vector::const_reverse_iterator(this->cend());
         }
-        
+
         fixed_vector::reverse_iterator rend()
         {
             return fixed_vector::reverse_iterator(this->begin());
@@ -252,33 +258,40 @@ namespace xstl
         {
             return fixed_vector::const_reverse_iterator(this->cbegin());
         }
-        
+
         class iterator
         {
         private:
             pointer current;
+
         public:
             using Self = iterator;
             friend const_iterator;
+
         public:
             using value_type = fixed_vector::value_type;
             using pointer = fixed_vector::pointer;
             using reference = fixed_vector::reference;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::random_access_iterator_tag;
+
         public:
             iterator() = delete;
             virtual ~iterator() = default;
+
         public: //move & copy member
-            iterator(const Self&) = default;
-            iterator(Self&&) = default;
-            Self& operator=(const Self&) = default;
-            Self& operator=(Self&&) = default;
+            iterator(const Self &) = default;
+            iterator(Self &&) = default;
+            Self &operator=(const Self &) = default;
+            Self &operator=(Self &&) = default;
+
         public:
-            iterator(pointer p): current(p) 
-            {}
+            iterator(pointer p) : current(p)
+            {
+            }
+
         public: //move operator
-            Self& operator++()
+            Self &operator++()
             {
                 current++;
                 return *this;
@@ -288,7 +301,7 @@ namespace xstl
                 current++;
                 return *this;
             }
-            Self& operator--()
+            Self &operator--()
             {
                 current--;
                 return *this;
@@ -298,6 +311,7 @@ namespace xstl
                 current--;
                 return *this;
             }
+
         public: //access operator
             reference operator*()
             {
@@ -323,12 +337,13 @@ namespace xstl
             {
                 return current;
             }
+
         public: //comparer
-            bool operator==(const Self& other) const
+            bool operator==(const Self &other) const
             {
                 return this->current == other.current;
             }
-            bool operator!=(const Self& other) const
+            bool operator!=(const Self &other) const
             {
                 return this->current != other.current;
             }
@@ -338,29 +353,37 @@ namespace xstl
         {
         private:
             const_pointer current;
+
         public:
             using Self = const_iterator;
+
         public:
             using value_type = value_type;
             using pointer = pointer;
             using reference = reference;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::random_access_iterator_tag;
+
         public:
             const_iterator() = delete;
             virtual ~const_iterator() = default;
+
         public: //move & copy member
-            const_iterator(const Self&) = default;
-            const_iterator(Self&&) = default;
-            Self& operator=(const Self&) = default;
-            Self& operator=(Self&&) = default;
+            const_iterator(const Self &) = default;
+            const_iterator(Self &&) = default;
+            Self &operator=(const Self &) = default;
+            Self &operator=(Self &&) = default;
+
         public:
             const_iterator(const_pointer p) : current(p)
-            {}
+            {
+            }
             const_iterator(iterator it) : current(it.current)
-            {}
+            {
+            }
+
         public: //move operator
-            Self& operator++()
+            Self &operator++()
             {
                 current++;
                 return *this;
@@ -370,7 +393,7 @@ namespace xstl
                 current++;
                 return *this;
             }
-            Self& operator--()
+            Self &operator--()
             {
                 current--;
                 return *this;
@@ -380,6 +403,7 @@ namespace xstl
                 current--;
                 return *this;
             }
+
         public: //access operator
             const_reference operator*() const
             {
@@ -393,17 +417,19 @@ namespace xstl
             {
                 return current;
             }
+
         public: //comparer
-            bool operator==(const Self& other) const
+            bool operator==(const Self &other) const
             {
                 return this->current == other.current;
             }
-            bool operator!=(const Self& other) const
+            bool operator!=(const Self &other) const
             {
                 return this->current != other.current;
             }
         };
     };
 
+}; // namespace xstl
 
-};
+#endif

@@ -1,15 +1,14 @@
 #include <iostream>
-#include <vector>
-#include "heap/heap.h"
+#include "tree/splay_tree.h"
 
 int main()
 {
     using namespace std;
     using namespace xstl;
 
-    heap<int> h{1,4,3,2,5,0};
+    splay_tree<int> t;
 
-    cout<<h.front();
+    t.insert(1);
 
     return 0;
 }

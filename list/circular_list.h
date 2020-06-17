@@ -1,3 +1,6 @@
+#ifndef __XSTL_CIRCULER_LIST__
+#define __XSTL_CIRCULER_LIST__
+
 #include <cassert>
 #include <utility>
 #include <iterator>
@@ -687,3 +690,5 @@ namespace xstl
         };
     };
 } // namespace xstl
+
+#endif
