@@ -9,6 +9,17 @@
         "tuple": "cpp",
         "xhash": "cpp",
         "xmemory": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "unordered_map": "cpp",
+        "array": "cpp",
+        "atomic": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "memory_resource": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp"
     }
 }

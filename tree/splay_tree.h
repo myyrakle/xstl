@@ -40,10 +40,10 @@ namespace xstl
 		};
 
 	private:
-		void rotate(node_type *); //전달되는 노드를 해당 노드의 부모 위치로 옮깁니다.
-		void splay(node_type *);  //
+		void _rotate(node_type *); //전달되는 노드를 해당 노드의 부모 위치로 옮깁니다.
+		void _splay(node_type *);  //
 
-	private:
+	public:
 		node_type *root = nullptr;
 		size_t node_count = 0;
 
@@ -64,17 +64,17 @@ namespace xstl
 
 	public: //modifiers
 		void clear();
-		void insert(const key_type &);
+		void insert(const value_type &);
 		//void insert(key_type&&);
 		template <class... Args>
 		void emplace(Args &&... args);
 		void erase(iterator);
 
 	public: //lookup
-		size_type count(const key_type &key) const;
-		iterator find(const key_type &key);
-		const_iterator find(const key_type &key) const;
-		bool contains(const key_type &);
+		size_type count(const value_type &key) const;
+		iterator find(const value_type &key);
+		const_iterator find(const value_type &key) const;
+		bool contains(const value_type &);
 
 	public:
 		class iterator
@@ -129,51 +129,51 @@ namespace xstl
 	}
 
 	template <class T, class Compare>
-	void splay_tree<T, Compare>::rotate(splay_tree<T, Compare>::node_type *node)
+	void splay_tree<T, Compare>::_rotate(splay_tree<T, Compare>::node_type *node)
 	{
 		node_type *parent = node->parent;
-		node_type *p = nullptr;
+		node_type *b = nullptr;
 
 		if (node == parent->left)
 		{
-			parent->left = p = node->right;
+			parent->left = b = node->right;
 			node->right = parent;
 		}
 		else
 		{
-			parent->right = p = node->left;
+			parent->right = b = node->left;
 			node->left = parent;
 		}
 
 		node->parent = parent->parent;
 		parent->parent = node;
 
-		if (p)
-			p = p->parent = parent;
+		if (b)
+			b->parent = parent;
 
 		(node->parent ? (parent == node->parent->left ? node->parent->left : node->parent->right)
 					  : this->root) = node;
 	}
 
 	template <class T, class Compare>
-	void splay_tree<T, Compare>::splay(splay_tree<T, Compare>::node_type *node)
+	void splay_tree<T, Compare>::_splay(splay_tree<T, Compare>::node_type *node)
 	{
 		while (node->parent)
 		{
 			node_type *parent = node->parent;
 			node_type *grand_parent = parent->parent;
 
-			auto node_to_rotate = (node == parent->left) && (parent == grand_parent->left) ? parent : node;
+			auto node_to__rotate = (node == parent->left) && (parent == grand_parent->left) ? parent : node;
 
 			if (grand_parent)
-				rotate(node_to_rotate);
+				_rotate(node_to__rotate);
 
-			rotate(node);
+			_rotate(node);
 		}
 	}
 
 	template <class T, class Compare>
-	void splay_tree<T, Compare>::insert(const T &value)
+	void splay_tree<T, Compare>::insert(const splay_tree<T, Compare>::value_type &value)
 	{
 		node_type *origin_root = this->root;
 		node_type **ref;
@@ -185,6 +185,7 @@ namespace xstl
 		}
 
 		while (true)
+		{
 			if (value == origin_root->value)
 				return; //중복 배제
 
@@ -206,11 +207,11 @@ namespace xstl
 				}
 				origin_root = origin_root->right;
 			}
-
+		}
 		node_type *x = new node_type(value);
 		*ref = x;
 		x->parent = origin_root;
-		splay(x);
+		_splay(x);
 	}
 
 	template <class T, class Compare>
