@@ -43,6 +43,11 @@ namespace xstl
 		void _rotate(node_type *); //전달되는 노드를 해당 노드의 부모 위치로 옮깁니다.
 		void _splay(node_type *);  //
 
+		node_type* get_lowest_left()
+		{
+
+		}
+
 	public:
 		node_type *root = nullptr;
 		size_t node_count = 0;
@@ -78,33 +83,95 @@ namespace xstl
 
 	public:
 		class iterator
-		{
-			T &operator*() const;
-			iterator &operator++();
-			iterator operator++(int);
-			iterator &operator--();
-			iterator operator--(int);
-			bool operator==(const iterator &) const;
-			bool operator!=(const iterator &) const;
-			bool operator<(const iterator &) const;
-			bool operator<=(const iterator &) const;
-			bool operator>(const iterator &) const;
-			bool operator>=(const iterator &) const;
-		};
-		class const_iterator
-		{
-			T &operator*() const;
-			const_iterator &operator++();
-			const_iterator operator++(int);
-			const_iterator &operator--();
-			const_iterator operator--(int);
-			bool operator==(const const_iterator &) const;
-			bool operator!=(const const_iterator &) const;
-			bool operator<(const const_iterator &) const;
-			bool operator<=(const const_iterator &) const;
-			bool operator>(const const_iterator &) const;
-			bool operator>=(const const_iterator &) const;
-		};
+        {
+        private:
+            node_type *current;
+
+        public:
+            using Self = iterator;
+            friend const_iterator;
+            friend circular_list;
+
+        public:
+            using value_type = value_type;
+            using pointer = pointer;
+            using reference = reference;
+            using difference_type = std::ptrdiff_t;
+            using iterator_category = std::bidirectional_iterator_tag;
+
+        public:
+            iterator() = delete;
+            virtual ~iterator() = default;
+
+        public: //move & copy member
+            iterator(const Self &) = default;
+            iterator(Self &&) = default;
+            Self &operator=(const Self &) = default;
+            Self &operator=(Self &&) = default;
+
+        public:
+            iterator(node_type *p) : current(p)
+            {
+            }
+
+        public: //move operator
+            Self &operator++()
+            {
+                assert(current != nullptr);
+                //??
+                return *this;
+            }
+            Self operator++(int)
+            {
+                assert(current != nullptr);
+                //??
+                return *this;
+            }
+            Self &operator--()
+            {
+                assert(current != nullptr);
+                //??
+                return *this;
+            }
+            Self operator--(int)
+            {
+                assert(current != nullptr);
+                //??
+                return *this;
+            }
+
+        public: //access operator
+            reference operator*()
+            {
+                assert(current != nullptr);
+                return current->value;
+            }
+            const_reference operator*() const
+            {
+                assert(current != nullptr);
+                return current->value;
+            }
+            pointer operator->()
+            {
+                assert(current != nullptr);
+                return &current->value;
+            }
+            const_pointer operator->() const
+            {
+                assert(current != nullptr);
+                return &current->value;
+            }
+
+        public: //comparer
+            bool operator==(const Self &other) const
+            {
+                return this->current == other.current;
+            }
+            bool operator!=(const Self &other) const
+            {
+                return this->current != other.current;
+            }
+        };
 
 		iterator begin();
 		iterator end();
